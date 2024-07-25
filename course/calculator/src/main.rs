@@ -16,7 +16,11 @@ import {  Button,VerticalBox} from "std-widgets.slint";
         border-radius: 4px;
         border-width: 2px;
         border-color: self.background.darker(20%);
-        ta := TouchArea {}
+        ta := TouchArea {
+                clicked => { CalcLogic.button-pressed(root.text);
+
+                }
+            }
         Text { text: root.text; }
     }
 }
@@ -77,9 +81,17 @@ Text { text:  counter; colspan: 3; }
 
 
 
+
 fn main() {
     let app: App = App::new().unwrap();
     let weak: Weak<App> = app.as_weak();
+    app.global::<CalcLogic>().on_button_pressed(
+        move | counter | {
+            let app = weak.unwrap();
+            let counter:i32 = counter.parse().unwrap();
+            app.set_counter(app.get_counter() * 10 + counter);
+        }
+    );
 
 
 
